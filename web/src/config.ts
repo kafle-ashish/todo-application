@@ -7,7 +7,7 @@ const configs = {
     },
     dev: {
         API: {
-            todoApi: "http://localhost:3000"
+            todoApi: "https://akcsujhdtb.execute-api.ap-southeast-2.amazonaws.com/dev"
         },
         headers: getHeaders(),
     },

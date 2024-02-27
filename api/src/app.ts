@@ -7,6 +7,7 @@ import { todoRouter } from './routes/todo-routes';
 import { userRouter } from './routes/user-routes';
 import * as swaggerDocument from './swagger.json';
 import { connectDb } from './utils/db';
+import ServerlessHttp from "serverless-http";
 
 const app = express();
 
@@ -22,6 +23,10 @@ app.use(errorMiddleware);
 
 connectDb();
 
-app.listen(config.port, () => {
-    console.log(`Server is running on port ${config.port}`);
-});
+if (process.env.ENV === "local") {
+    app.listen(config.port, () => {
+        console.log(`Server is running on port ${config.port}`);
+    });
+}
+
+export const handler = ServerlessHttp(app, { provider: "aws" })

@@ -1,0 +1,132 @@
+service: ${env:SERVICE_NAME,""}todo
+useDotenv: true
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-southeast-2'}
+  stackName: ${env:CFN_STACK_NAME,''}
+  timeout: 30
+  versionFunctions: false
+  deploymentBucket:
+    blockPublicAccess: true
+    name: ${env:ARTIFACT_BUCKET_NAME,''}
+    maxPreviousDeploymentArtifacts: 10
+  deploymentPrefix: ${self:service}
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_NAME: ${env:DB_NAME}
+    JWT_KEY: ${env:JWT_KEY}
+    ENV: ${env:JWT_KEY, 'dev'}
+
+  vpc:
+    subnetIds:
+      - Fn::ImportValue: ${self:provider.stage}-PrivateSubnetA
+      - Fn::ImportValue: ${self:provider.stage}-PrivateSubnetB
+      - Fn::ImportValue: ${self:provider.stage}-PrivateSubnetC
+
+custom:
+  cert:
+    dev: ${env:CERT}
+
+package:
+  include:
+    - src/**
+    - handler.js
+  exclude:
+    - .git/**
+    - .travis.yml
+    - infra/**
+    - build
+  excludeDevDependencies: true
+
+functions:
+  server:
+    handler: src/app.handler
+    description: Root express handler.
+    role: LambdaRole
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors:
+            origin: "*"
+            headers:
+              [
+                "Content-Type",
+                "X-Amz-Date",
+                "Authorization",
+                "X-Api-Key",
+                "X-Amz-Security-Token",
+                "X-Amz-User-Agent",
+                "authorisationtoken",
+              ]
+
+resources:
+  Transform: AWS::Serverless-2016-10-31
+  Resources:
+    LambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+          Version: "2012-10-17"
+        Path: /
+        Policies:
+          - PolicyName: "LambdaRole"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - execute-api:Invoke
+                  Resource:
+                    - "*"
+                - Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Effect: Allow
+                  Resource: "*"
+                - Action: logs:CreateLogGroup
+                  Effect: Allow
+                  Resource: "*"
+                - Action:
+                    - ec2:DescribeNetworkInterfaces
+                    - ec2:CreateNetworkInterface
+                    - ec2:DeleteNetworkInterface
+                  Effect: Allow
+                  Resource: "*"
+                - Action:
+                    - "ses:SendEmail"
+                    - "ses:SendRawEmail"
+                  Effect: Allow
+                  Resource: "*"
+    GatewayResponseDefault4XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: "ApiGatewayRestApi"
+    GatewayResponseDefault5XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: "ApiGatewayRestApi"
+
+plugins:
+  - serverless-plugin-typescript
