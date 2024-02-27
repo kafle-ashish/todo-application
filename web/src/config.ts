@@ -20,6 +20,6 @@ function getHeaders() {
     };
 }
 
-const env = (import.meta.env.ENV ?? "local").toLowerCase() as keyof typeof configs;
+const env = (import.meta.env.VITE_ENV ?? "local").toLowerCase() as keyof typeof configs;
 
 export const config = configs[env]
