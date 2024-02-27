@@ -1,0 +1,49 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.auth-page {
+  .login-page,
+  .register-page {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.todo-page {
+  display: flex;
+  flex-direction: column;
+
+  .todo-items {
+    max-width: 1080;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: start;
+    margin: 0 auto;
+    padding: 20px 0;
+    width: 100%;
+  }
+
+  .todo-title {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+}
