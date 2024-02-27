@@ -19,7 +19,7 @@ provider:
     DB_HOST: ${env:DB_HOST}
     DB_NAME: ${env:DB_NAME}
     JWT_KEY: ${env:JWT_KEY}
-    ENV: ${env:JWT_KEY, 'dev'}
+    ENV: ${env:ENV, 'dev'}
 
   vpc:
     subnetIds:
