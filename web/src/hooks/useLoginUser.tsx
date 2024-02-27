@@ -18,7 +18,7 @@ export function useLoginUser(): R {
             localStorage.setItem("user", JSON.stringify(data.user));
             localStorage.setItem("token", data.token);
 
-            navigate("/");
+            setTimeout(() => navigate("/"), 1000)
 
         } catch (error) {
             console.error(error);

@@ -11,11 +11,17 @@ body {
 }
 
 .auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
   .login-page,
   .register-page {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin: 0 auto;
     margin-bottom: 10px;
   }
 }

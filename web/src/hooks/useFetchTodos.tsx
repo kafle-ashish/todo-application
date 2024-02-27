@@ -30,6 +30,7 @@ export function useFetchTodos(): R {
         } catch (error) {
             console.error(error);
             messageApi.error("Error fetching todos!", 3);
+            setPaginationState(state => ({ ...state, isLoading: false }));
 
             return false;
         }

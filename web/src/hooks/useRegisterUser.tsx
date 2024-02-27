@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { registerUser } from "../api/user-api"
 import { message } from "antd";
 
@@ -9,6 +9,7 @@ type R = [
 
 export function useRegisterUser(): R {
     const [messageApi, contextHolder] = message.useMessage();
+    const navigate = useNavigate();
 
     const register = async (email: string, password: string) => {
         try {
@@ -17,7 +18,8 @@ export function useRegisterUser(): R {
             localStorage.setItem("user", data.user);
             localStorage.setItem("token", data.token);
 
-            Navigate({ to: "/" });
+            setTimeout(() => navigate("/"), 1000)
+
         } catch (error) {
             messageApi.error("Error registering user!", 3);
         }

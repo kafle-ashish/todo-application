@@ -28,9 +28,6 @@ export function TodoPage() {
         fetchTodos(1, 5, paginationState.filter);
     }, []);
 
-    console.log(paginationState);
-
-
     return (
         <div className="todo-page">
             <div className="todo-title">

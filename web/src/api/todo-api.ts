@@ -1,4 +1,4 @@
-import { config } from "../config";
+import { config, getHeaders } from "../config";
 import { Todo } from "../interfaces";
 
 export async function createTodo(todo: Omit<Todo, "_id">) {
@@ -9,7 +9,7 @@ export async function createTodo(todo: Omit<Todo, "_id">) {
         method: "POST",
         body: JSON.stringify(todo),
         //@ts-expect-error ignore
-        headers: config.headers,
+        headers: getHeaders(),
         mode: "cors",
     });
 
@@ -28,7 +28,7 @@ export async function getUserTodos(page: number, take: number, status: "pending"
     const response = await fetch(url, {
         method: "GET",
         //@ts-expect-error ignore
-        headers: config.headers,
+        headers: getHeaders(),
         mode: "cors",
     });
 
@@ -47,7 +47,7 @@ export async function deleteTodo(id: string) {
     const response = await fetch(url, {
         method: "DELETE",
         //@ts-expect-error ignore
-        headers: config.headers,
+        headers: getHeaders(),
         mode: "cors",
     });
 
@@ -66,7 +66,7 @@ export async function updateTodo(todo: Pick<Todo, "_id" | "status" | "descriptio
         method: "PUT",
         body: JSON.stringify(rest),
         //@ts-expect-error ignore
-        headers: config.headers,
+        headers: getHeaders(),
         mode: "cors",
     });
 

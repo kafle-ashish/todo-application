@@ -1,4 +1,4 @@
-import { config } from "../config";
+import { config, getHeaders } from "../config";
 import { User } from "../interfaces";
 
 export async function registerUser(user: Omit<User, "_id">) {
@@ -9,7 +9,7 @@ export async function registerUser(user: Omit<User, "_id">) {
         method: "POST",
         body: JSON.stringify(user),
         //@ts-expect-error ignore
-        headers: config.headers,
+        headers: getHeaders(),
         mode: "cors",
     });
 
@@ -29,7 +29,7 @@ export async function loginUser(user: Pick<User, "email" | "password">) {
         method: "POST",
         body: JSON.stringify(user),
         //@ts-expect-error ignore
-        headers: config.headers,
+        headers: getHeaders(),
         mode: "cors",
     });
 
