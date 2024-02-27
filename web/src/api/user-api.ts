@@ -8,6 +8,7 @@ export async function registerUser(user: Omit<User, "_id">) {
     const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(user),
+        //@ts-expect-error ignore
         headers: config.headers,
         mode: "cors",
     });
@@ -27,6 +28,7 @@ export async function loginUser(user: Pick<User, "email" | "password">) {
     const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(user),
+        //@ts-expect-error ignore
         headers: config.headers,
         mode: "cors",
     });

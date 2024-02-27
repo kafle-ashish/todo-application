@@ -8,6 +8,7 @@ export async function createTodo(todo: Omit<Todo, "_id">) {
     const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(todo),
+        //@ts-expect-error ignore
         headers: config.headers,
         mode: "cors",
     });
@@ -26,6 +27,7 @@ export async function getUserTodos(page: number, take: number, status: "pending"
 
     const response = await fetch(url, {
         method: "GET",
+        //@ts-expect-error ignore
         headers: config.headers,
         mode: "cors",
     });
@@ -44,6 +46,7 @@ export async function deleteTodo(id: string) {
 
     const response = await fetch(url, {
         method: "DELETE",
+        //@ts-expect-error ignore
         headers: config.headers,
         mode: "cors",
     });
@@ -62,6 +65,7 @@ export async function updateTodo(todo: Pick<Todo, "_id" | "status" | "descriptio
     const response = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(rest),
+        //@ts-expect-error ignore
         headers: config.headers,
         mode: "cors",
     });
